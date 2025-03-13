@@ -12,21 +12,12 @@ import SwiftUI
 struct OutsideView: View {
     @StateObject var vm : Board
     @EnvironmentObject var gameData : GameManager
-    @EnvironmentObject var uiSettings : UserSettingsManager
+
     
     var body: some View {
         NavigationStack {
             HStack {
-                if uiSettings.isLeft() {
-                    StatusViewBar(vm: vm)
-                }
-                BoardView(vm: gameData.board)
-                    .overlay {
-                       overlayView()
-                    }
-                if !uiSettings.isLeft() {
-                    StatusViewBar(vm: vm)
-                }
+                Text("NOTHING")
             }
             .background(Color.black)
         }
@@ -71,7 +62,6 @@ struct OutsideView: View {
 struct OutsideView_Previews: PreviewProvider {
     static var previews: some View {
         OutsideView(vm: Board())
-            .environmentObject(UserSettingsManager.shared)
             .environmentObject(GameManager())
     }
 }

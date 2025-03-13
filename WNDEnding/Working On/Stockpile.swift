@@ -8,14 +8,10 @@
 import Foundation
 class Stockpile : ObservableObject {
     @Published var stockpileData : StockpileModel
-    var buildingMan = BuildingManager.shared
     static let shared = Stockpile()
     var key = "stocks"
     private init() {
-        self.stockpileData = load(key: key) ?? StockpileModel()
-    }
-    func selfSave(){
-        save(items: stockpileData, key: key)
+        self.stockpileData = StockpileModel()
     }
     func reset(){
         stockpileData.reset()
@@ -26,8 +22,6 @@ class Stockpile : ObservableObject {
     func runDaily(){
         stockpileData.calcConsumption()
         stockpileData.updateGraveYard()
-        SurvivorDirector.shared.printSurvivorsAndLocations()
-        selfSave()
     }
     func update(){
         for survivor in stockpileData.rosterOfSurvivors {
@@ -71,9 +65,6 @@ class Stockpile : ObservableObject {
     func getAllLivingSurvivorsInCamp()->[Soul] {
         return stockpileData.getAllLivingSurvivorsInCamp()
     }
-    func getAllLivingSurvivorsInBuildings(outside : any Buildable)->[Soul] {
-        return stockpileData.getAllLivingSurvivorsInBuildings(outside: outside)
-    }
     func setSurvivorRoster(newList : [Soul]){
         stockpileData.setSurvivors(newList)
     }
@@ -91,9 +82,6 @@ class Stockpile : ObservableObject {
     }
     func addSurvivor(survivor : Soul){
         stockpileData.addSurvivors(survivors: [survivor])
-    }
-    func addResource(_ value: Int, for type: ResourceType) {
-        stockpileData.addResource(value, for: type)
     }
     func swapPlacesOfSurvivors(selectedSurvivorInSpot: Soul, insideBuild: Soul){
         stockpileData.swapPlacesOfSurvivors(selectedSurvivorInSpot: selectedSurvivorInSpot, insideBuild: insideBuild)
@@ -135,6 +123,7 @@ class Stockpile : ObservableObject {
     func getSurvivorIndex(id : UUID)->Int{
         return stockpileData.getSurvivorIndex(id: id)
     }
+    
     func transportSurvivorsOnVan() -> [Soul] {
         return VanLoaderManager.shared.transportSurvivorsOnVan()
     }
@@ -149,17 +138,6 @@ struct StockpileModel : Codable, Identifiable {
     mutating func addSurvivors(survivors : [Soul]){
         rosterOfSurvivors.append(contentsOf: survivors)
     }
-    mutating func addResource(_ value: Int, for type: ResourceType) {
-        switch type {
-        case .food:
-            foodStored += value
-        case .material:
-            buildingResources += value
-        case .people:
-                SurvivorGenerator.shared.addSurvivors(value)
-        }
-    }
- 
     mutating func updateGraveYard(){
         for survivor in rosterOfSurvivors {
             if survivor.livingStatus == .dead {
@@ -256,15 +234,6 @@ struct StockpileModel : Codable, Identifiable {
             return true
         }
         return false
-    }
-    func getAllLivingSurvivorsInBuildings(outside : any Buildable)->[Soul]{
-        var survivorsInBuild : [Soul] = []
-        for survivor in rosterOfSurvivors {
-            if survivor.location != .inBuilding(outside.buildID) && survivor.location != .inVan {
-                survivorsInBuild.append(survivor)
-            }
-        }
-        return survivorsInBuild
     }
     init() {
         self.foodStored = 10

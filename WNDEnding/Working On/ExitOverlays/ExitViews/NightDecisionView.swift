@@ -19,18 +19,16 @@ struct NightDecisionView: View {
                 vm.pack.getFood() >= resultCalculator.results.costOfSafeOption ? Button("Distract with \(resultCalculator.results.costOfSafeOption)") {
                     
                     vm.pack.addFood(-resultCalculator.results.costOfSafeOption)
-                    vm.audio.playSFX(.transition)
                     vm.chosenOverlay = .ended(.result(.distract))
                 } : Button("Unable to distract. Cost : \(resultCalculator.results.costOfSafeOption)"){}
                 Button("Run"){
                     // code for the risky option
                     let randomNumber = Double.random(in: 0...1)
                     if randomNumber < resultCalculator.results.chanceOfFailure {
-                        vm.audio.playSFX(.badResult)
                         vm.chosenOverlay = .ended(.result(.eaten))
                     }
                     else {
-                        vm.audio.playSFX(.transition)
+                      
                         vm.chosenOverlay = .ended(.result(.run))
                     }
                     

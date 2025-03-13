@@ -65,11 +65,6 @@ extension Board {
     
     
     
-    //MARK: Next Turn
-    func getTerrainAt(_ coord : Coord)->String{
-        
-        return terrainBoard[coord.row][coord.col].name
-    }
     func killPlayerUnit(_ piece : Soul){
             for player in playerControlled.indices {
                 if playerControlled[player].id ==  piece.id {
@@ -91,19 +86,6 @@ extension Board {
         updateGameStatus()
     }
     
-    func runBehaviorOfAllZombies() {
-        for mob in mobs {
-            if mob.value.team == .undead {
-                executeZombieBehavior(zombie: mob.value)
-            }
-        }
-    }
-    func applyTileStatuses(){
-        for piece in mobs {
-            let shouldHide = getTerrainProperties(of: piece.key).providesConcealment
-            mobs[piece.key]!.concealment = shouldHide ? .hidden : .visible
-        }
-    }
     func checkHPAndRefreshStamina(){
         for piece in mobs {
             checkUnitDeath(piece.key)
@@ -114,22 +96,6 @@ extension Board {
         if timer.turnsSinceStart <= timer.lengthOfPlay {
             //audio.playSFX(.nextTurn)
             timer.advanceHour(numberOfZombies, board: self)
-            
-            let clock = ContinuousClock()
-            var start = clock.now
-            print("Starting Applying Tiles")
-            applyTileStatuses()
-            print("Finished in \(clock.now - start)")
-            start = clock.now
-            print("Starting Zombies")
-           runBehaviorOfAllZombies()
-            print("Finished in \(clock.now - start)")
-            start = clock.now
-            print("Starting HP and Stamina")
-            checkHPAndRefreshStamina()
-            print("Finished in \(clock.now - start)")
-            start = clock.now
-            deselectUnit()
             updateGameStatus()
         }
         else{

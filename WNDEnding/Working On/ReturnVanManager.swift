@@ -19,7 +19,6 @@ class ReturnVanManager{
             Stockpile.shared.stockpileData.buildingResources += vm.getMatter()
         }
         returnHome(vm: board)
-        Stockpile.shared.selfSave()
     }
     
     /*
@@ -27,8 +26,6 @@ class ReturnVanManager{
      */
     func returnHome(vm:Board) {
         var list = Stockpile.shared.getRosterOfSurvivors()//Gets original list
-        print("Here is where people were before returnHome was called.")
-        SurvivorDirector.shared.printSurvivorsAndLocations()
         for var survivor in vm.playerControlled {//Goes through everyone that went into board.
             survivor.location = .inCamp
             if let index = list.firstIndex(where: { $0.id == survivor.id }) {//Locates and updates those already in the original list.

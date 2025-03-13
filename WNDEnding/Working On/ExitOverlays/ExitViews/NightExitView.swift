@@ -11,7 +11,6 @@ struct NightExitView: View {
     var pack : OutsideHaulStockpile
     var gameData : GameManager
     var presentChoices = false//Present user with two
-    var constructor = BuildingViewConstructor.shared
     @ObservedObject var stockpile = Stockpile.shared
     
     private func getTotalFood()->Int{

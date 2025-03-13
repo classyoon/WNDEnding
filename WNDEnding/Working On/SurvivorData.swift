@@ -21,7 +21,6 @@ struct Soul : Codable, Identifiable, Equatable, Hashable {
     
     var health : Int = 10
     var stamina : Int = 2
-    var buildProfficency : Int = (BuildingManager.shared.getBuilding(id: .buildUpgrade).getStatus() == .done ? 2 : 1)
     var workProfficency : Int = 1
     
     var name : String {
@@ -45,4 +44,18 @@ enum Place : Codable, Hashable {
 }
 enum Sex : Codable {
     case male, female, unknown
+}
+//ADDED
+enum BuildingID : CaseIterable, Codable, Hashable {
+    case farm
+    case mine
+    case cure
+    case noneFound
+    case upgrade
+    case lab
+    case nursery
+    case upgrade2
+    case attackUpgrade
+    case buildUpgrade
+    case attackUpgrade2
 }
